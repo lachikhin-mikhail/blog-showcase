@@ -1,6 +1,8 @@
 from django.db import models
 from stdimage.models import StdImageField
 from django.conf import settings
+from django.contrib.auth.models import User
+
 
 class Post(models.Model):
     body = models.TextField()
@@ -8,11 +10,11 @@ class Post(models.Model):
     likes = models.IntegerField()
     reposts = models.IntegerField()
     is_reposted = models.BooleanField()
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     
     
     
 class Comments(models.Model):
     comment = models.TextField(max_length=2200)
-    commentator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    commentator = models.ForeignKey(User, on_delete=models.CASCADE)
     parent_post = models.ForeignKey("posts.Post", on_delete=models.CASCADE)
