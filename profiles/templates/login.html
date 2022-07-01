@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if error %}
+{{ error }}
+<br />
+<br />
+{% endif %}
+<!--
+<h1>Login</h1>
+
+   <main>
+       <div class="justtext4">
+           <h5>
+               LOG IN
+           </h5>
+       </div>
+
+       <div class="circle1"></div>
+       <div class="login-form-container">
+           <form method="POST" action="{% url 'login' %}">
+             {% csrf_token %}
+               <div class="form-fields">
+                 <input type="text" name="username" placeholder="USERNAME"/>
+                </div>
+                <br>
+                   <div class="form-field">
+                     <input type="password" name="password" placeholder="PASSWORD"/>
+
+               </div>
+               <br>
+               <div class="form-buttons">
+                 <input class="btn btn-primary" type="submit" value="Login" />
+               </div>
+               <br>
+               <p><a href="{% url 'signup' %}">you dont have account?</a></p>
+           </form>
+       </div>
+   </main>
+
+</body>
+-->
+
+  <body class="text-center">
+    
+<main class="form-signin w-100 m-auto">
+  <form>
+    <img class="mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+    <h1 class="h3 mb-3 fw-normal">Please log in</h1>
+
+    <div class="form-floating">
+      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <label for="floatingPassword">Password</label>
+    </div>
+
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Log in</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
+  </form>
+</main>
+
+
+    
+  </body>
+</html>
+
+
+{% endblock %}
