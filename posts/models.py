@@ -11,6 +11,7 @@ class Post(models.Model):
     reposts = models.IntegerField()
     is_reposted = models.BooleanField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=False, auto_now_add=True)
     
     
     

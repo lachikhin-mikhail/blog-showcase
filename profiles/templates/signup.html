@@ -10,11 +10,10 @@
 
 <h1>Sign Up!</h1>
 
-<form method="POST" action="{% url 'signup' %}">
-{% csrf_token %}
+
 Username:
 <br />
-<input type="text" name="username" />
+
 <br />
 Password:
 <br />
@@ -29,61 +28,28 @@ Confirm Password:
 </form>
                <p><a href="{% url 'login' %}">have an account?</a></p>
 -->
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.98.0">
-    <title>Signin Template · Bootstrap v5.2</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/sign-in/">
-
-    
-
-    
-
-<link href="/docs/5.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-
-    <!-- Favicons -->
-<link rel="apple-touch-icon" href="#" sizes="180x180">
-<link rel="icon" href="#" sizes="32x32" type="image/png">
-<link rel="icon" href="#" sizes="16x16" type="image/png">
-<link rel="manifest" href="/docs/5.2/assets/img/favicons/manifest.json">
-<link rel="mask-icon" href="/docs/5.2/assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">
-<link rel="icon" href="/docs/5.2/assets/img/favicons/favicon.ico">
-<meta name="theme-color" content="#712cf9">
-
-
-   
-    
-    <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
-  </head>
   <body class="text-center">
     
 <main class="form-signin w-100 m-auto">
-  <form>
+    <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
     <img class="mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-
-    <div class="form-floating">
-      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-      <label for="floatingInput">Email address</label>
+    <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
+      <input type="text" class="form-control" id="floatingInput" placeholder="Username" name="username">
+      <br>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-      <label for="floatingPassword">Password</label>
+        <input type="email" class="form-control" id="floatingInput" placeholder="Email" name="email">
+        <br>
+      </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password1">
     </div>
-
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Remember me
-      </label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    <div class="form-floating">
+        <input type="password" class="form-control" id="floatingPassword" placeholder="Confirm password" name="password2">
+        <br>
+      </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
     <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
   </form>
 </main>
