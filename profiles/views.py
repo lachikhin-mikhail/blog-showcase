@@ -29,11 +29,11 @@ def signup(request):
                 user = User.objects.get(username=request.POST['username'])
                 return render(request, 'signup.html', {'error': 'Username has already been taken ☹️'})
             except User.DoesNotExist:
-                try:
-                    user = User.object.get(username=request.POST['email'])
+                if User.objects.filter(email=request.POST['email']).exists():
                     return render(request, "signup.html",{'error': "This email is already used 🤔"})
-                except User.DoesNotExist:
+                else:
                     user = User.objects.create_user(request.POST['username'],
+                                                    email=request.POST['email'],
                                                     password=request.POST['password1'])
                     profile = Profile.objects.create(owner=User.objects.get(username=request.POST['username']))
                     auth.login(request, user)
