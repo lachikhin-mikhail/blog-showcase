@@ -9,6 +9,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from django.db import ProgrammingError
 
 
 """ def signup(request):
@@ -30,23 +31,22 @@ from django.core.mail import EmailMessage
  """
 
 def signup(request):
-    if request.user.is_authenticated:
-        return redirect("home")
     if request.method == 'POST':
         if request.POST['password1'] == request.POST['password2']:
             try:
-                user = User.objects.get(username=request.POST['username'])
+                user = User.objects.get(username=request.POST['usrnm'])
                 return render(request, 'signup.html', {'error': 'Username has already been taken ☹️'})
             except User.DoesNotExist:
                 if User.objects.filter(email=request.POST['email']).exists():
                     return render(request, "signup.html",{'error': "This email is already used 🤔"})
                 else:
-                    user = User.objects.create_user(request.POST['username'],
+                    user = User.objects.create_user(request.POST['usrnm'],
                                                     email=request.POST['email'],
                                                     password=request.POST['password1'])
-                    profile = Profile.objects.create(owner=User.objects.get(username=request.POST['username']))
                     user.is_active = False
                     user.save()
+                    profile = Profile.objects.create(owner=User.objects.get(username=request.POST['usrnm']))
+
                     
                     #auth.login(request, user)
                     current_site = get_current_site(request)
@@ -63,6 +63,8 @@ def signup(request):
             )
             email.send()
             return HttpResponse('Please confirm your email address to complete the registration')
+
+            
         else:
             return render(request, 'signup.html', {'error': 'Passwords must match'})
     else:
@@ -77,19 +79,16 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        login(request, user)
         # return redirect('home')
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        return redirect('login')
     else:
-        return HttpResponse('Activation link is invalid!')
+        return HttpResponse('Activation link is invalid!' + user)
 
 def login(request):
-    if request.user.is_authenticated:
-        return redirect("home")
     if request.method == 'POST':
         user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
-            auth.login(request, user)
+            auth.login(request)
             return redirect('home')
         else:
             return render(request, 'login.html', {'error': 'username or password is incorrect.'})

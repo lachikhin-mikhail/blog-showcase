@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
-from stdimage.models import StdImageField
+from stdimage import StdImageField
 
     
 class Profile(models.Model):
