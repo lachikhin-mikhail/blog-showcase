@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.98.0">
-    <title>Navbar Template · Bootstrap v5.2</title>
+    <title>blog</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/navbars/">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -16,33 +16,42 @@
 
 {% load static %}
 
+<!-- Navbar -->
 <link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}">
   </head>
   <body>
 
-<nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Always expand</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
 
-      <div class="collapse navbar-collapse" id="navbarsExample02">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+          {% if user.is_authenticated %}
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Favourite</a>
           </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'profile' username=user.get_username %}">Profile</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
+
+
+          {% else %}
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+          </li>
+          {% endif %}
         </ul>
-        <form role="search">
-          <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+        <form method="POST" class="form-inline my-2 my-md-0" action="{% url 'home'%}">
+          {% csrf_token %}
+          <input class="form-control" type="text" placeholder="Search">
+          <button class="w-1 btn btn-lg" type="submit">🔎</button>
         </form>
       </div>
-    </div>
-  </nav>
-  <br>
+    </nav>
   {% block content %}
   {% endblock %}
   <br>

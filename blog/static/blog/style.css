@@ -202,3 +202,20 @@ border-top-left-radius: 0;
 border-top-right-radius: 0;
 }
 
+
+/* Profile picture */
+
+.pfp {
+  width: 100;
+  max-width: 300px;
+  max-height: 300px;
+}
+
+/* Navbar */
+body {
+  padding-bottom: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}

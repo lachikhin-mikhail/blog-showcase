@@ -204,3 +204,12 @@ border-top-left-radius: 0;
 border-top-right-radius: 0;
 }
 
+/* Profile picture */
+
+.pfp {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}

@@ -1,8 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import auth
 from profiles.models import Profile
+from posts.models import Post
 from django.contrib.sites.shortcuts import get_current_site
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_str
@@ -10,7 +11,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.db import ProgrammingError
-
+from django.http import HttpResponseNotFound
 
 """ def signup(request):
     if request.method == 'POST':
@@ -34,18 +35,18 @@ def signup(request):
     if request.method == 'POST':
         if request.POST['password1'] == request.POST['password2']:
             try:
-                user = User.objects.get(username=request.POST['usrnm'])
+                user = User.objects.get(username=request.POST['username'])
                 return render(request, 'signup.html', {'error': 'Username has already been taken ☹️'})
             except User.DoesNotExist:
                 if User.objects.filter(email=request.POST['email']).exists():
                     return render(request, "signup.html",{'error': "This email is already used 🤔"})
                 else:
-                    user = User.objects.create_user(request.POST['usrnm'],
+                    user = User.objects.create_user(request.POST['username'],
                                                     email=request.POST['email'],
                                                     password=request.POST['password1'])
                     user.is_active = False
                     user.save()
-                    profile = Profile.objects.create(owner=User.objects.get(username=request.POST['usrnm']))
+                    profile = Profile.objects.create(owner=user)
 
                     
                     #auth.login(request, user)
@@ -88,14 +89,62 @@ def login(request):
     if request.method == 'POST':
         user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
-            auth.login(request)
+            auth.login(request, user=user)
             return redirect('home')
         else:
             return render(request, 'login.html', {'error': 'username or password is incorrect.'})
     else:
         return render(request, 'login.html')
 
-
 def logout(request):
-        auth.logout(request)
-        return redirect('home')
+    auth.logout(request)
+    return redirect('home')
+
+def profile(request, username):
+    try:
+        user = User.objects.get(username=username)
+        profile = Profile.objects.get(owner=user)
+        postsNum = len(Post.objects.filter(author=user))
+        followersNum = len(Profile.objects.filter(following=profile))
+        followingNum = 0
+        try:
+            for i in profile.following:
+                followingNum += 1
+        except: 
+            pass
+        return render(request, 'profile.html', {'owner':user, 'profile':profile, 'postsNum':postsNum, \
+            'followersNum':followersNum,'followingNum':followingNum })
+    except User.DoesNotExist:
+        return HttpResponseNotFound("Profile not found ☹️")
+
+def edit(request, username):
+    # Entering the page
+    if not request.user.is_authenticated:
+        return redirect('signup')
+    try:
+        user = User.objects.get(username=username)
+        if user == request.user:
+            profile = Profile.objects.get(owner=user)
+            # Edit sumbitted
+            if request.method == 'POST':    
+                try:
+                    profile.profilePicture = request.FILES['pfp']
+                except:
+                    pass
+                profile.name = request.POST['name']
+                profile.bio = request.POST['bio']
+                
+                profile.save()
+                return redirect('profile', username=username) 
+            else:
+            # Edit entered
+                return render(request, 'edit.html', {'owner':user , 'profile':profile })
+        else:
+            return render(request, 'profile.html', {'owner':user})
+    except User.DoesNotExist:
+        return HttpResponseNotFound("Profile not found ☹️")
+
+
+        
+        
+    

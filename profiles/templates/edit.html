@@ -1,0 +1,33 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+<section style="background-color: #eee;">
+    <div class="container py-5">  
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img
+              <h5 class="my-3">{{ profile.username }}</h5>
+              <form method="POST" action="{% url 'edit' username=owner.username %}" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <img class="pfp" src="{% get_media_prefix %}{{profile.profilePicture }}" alt="{% get_media_prefix %}{{ profile.profilePicture }}">
+                <input type="file" name="pfp" accept=".jpg, .jpeg, .png" placeholder="Change">
+                <p> Profile name: </p> 
+                <input type="text" class="form-control" id="floatingInput" name="name" value="{{ profile.name }}" maxlength="50">
+                {% comment %} <p class="text-muted mb-1">Full Stack Developer</p> {% endcomment %}
+                <p> About: </p> <br>
+                <input type="text" class="form-control" id="floatingInput" name="bio" value="{{ profile.bio }}"maxlength="160">
+                {% comment %} <p class="text-muted mb-4">Bay Area, San Francisco, CA</p> {% endcomment %}
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Save</button>
+              </form>
+
+            </div>
+          </div>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endblock %}

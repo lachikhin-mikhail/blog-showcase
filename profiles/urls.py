@@ -7,4 +7,6 @@ urlpatterns = [
     re_path(r'^signup/$', views.signup, name='signup'),
     path('activate/<slug:uidb64>/<slug:token>/',
         views.activate, name='activate'),
+    path('<slug:username>/', views.profile, name='profile'),
+    path('<slug:username>/edit',views.edit, name='edit')
 ]
