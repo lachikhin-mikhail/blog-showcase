@@ -1,33 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- 
-{% if error %}
-{{ error }}
-<br />
-<br />
-{% endif %}
-
-<h1>Sign Up!</h1>
-
-
-Username:
-<br />
-
-<br />
-Password:
-<br />
-<input type="password" name="password1" />
-<br />
-Confirm Password:
-<br />
-<input type="password" name="password2" />
-<br />
-<br />
-<input class="btn btn-primary" type="submit" value="Sign Up!" />
-</form>
-               <p><a href="{% url 'login' %}">have an account?</a></p>
--->
   <body class="text-center">
     
     <main class="form-signin w-100 m-auto">
@@ -48,8 +21,8 @@ Confirm Password:
           <br>
         </div>
         {% if error %}
-  {{ error }}
-  {% endif %}
+          {{ error }}
+        {% endif %}
       <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
       <p><a href="{% url 'login' %}">Have an account?😏</a></p>
       <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>

@@ -35,6 +35,9 @@
             <a class="nav-link" href="{% url 'profile' username=user.get_username %}">Profile</a>
           </li>
           <li class="nav-item active">
+            <a class="nav-link" href="{% url 'add_post' %}">Post</a>
+          </li>
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
           </li>
 
@@ -45,11 +48,6 @@
           </li>
           {% endif %}
         </ul>
-        <form method="POST" class="form-inline my-2 my-md-0" action="{% url 'home'%}">
-          {% csrf_token %}
-          <input class="form-control" type="text" placeholder="Search">
-          <button class="w-1 btn btn-lg" type="submit">🔎</button>
-        </form>
       </div>
     </nav>
   {% block content %}

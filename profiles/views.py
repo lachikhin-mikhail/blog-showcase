@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from profiles.models import Profile
@@ -104,16 +104,18 @@ def profile(request, username):
     try:
         user = User.objects.get(username=username)
         profile = Profile.objects.get(owner=user)
+        posts = Post.objects.filter(author=user)
         postsNum = len(Post.objects.filter(author=user))
         followersNum = len(Profile.objects.filter(following=profile))
         followingNum = 0
+        posts = Post.objects.filter(author=user)
         try:
             for i in profile.following:
                 followingNum += 1
         except: 
             pass
         return render(request, 'profile.html', {'owner':user, 'profile':profile, 'postsNum':postsNum, \
-            'followersNum':followersNum,'followingNum':followingNum })
+            'followersNum':followersNum,'followingNum':followingNum, 'posts':posts })
     except User.DoesNotExist:
         return HttpResponseNotFound("Profile not found ☹️")
 

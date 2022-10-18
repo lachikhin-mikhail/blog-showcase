@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <form method="POST" action="{% url 'add_post' %}" enctype='multipart/form-data'>
+        {% csrf_token %}
+      <div class="form-group">
+      <label for="formGroupExampleInput">Title</label>
+      <input type="text" class="form-control" id="formGroupExampleInput" placeholder="My new post!" name="title" required>
+    </div>
+    <div class="form-group">
+      <label for="formGroupExampleInput2">Content</label>
+      <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Here goes the big part 😎" name="body" required>
+    </div>
+    <div class="form-group">
+        <label for="formGroupExampleInput2"> Post image (optional) </label>
+        <input type="file" accept=".jpg, .jpeg, .png" placeholder="Change" name="image">
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Post</button>
+  </form>
+{% endblock %}
