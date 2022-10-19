@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from posts.models import Post
 
     
 class Profile(models.Model):
@@ -15,6 +16,18 @@ class Profile(models.Model):
         str=self.owner.username
         str=str + "'s profile"
         return str
+
+    def postsNum(self):
+        num = len(Post.objects.filter(author=self.owner))
+        return num
+    
+    def followersNum(self):
+        num = len(Following.objects.filter(profile=self))
+        return num
+
+    def followingNum(self):
+        num = len(Following.objects.filter(following_user=self))
+        return num
         
 class Following(models.Model):
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='followed_profile')

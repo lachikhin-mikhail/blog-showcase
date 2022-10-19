@@ -109,19 +109,19 @@ def profile(request, username):
         profile = Profile.objects.get(owner=user)
         posts = Post.objects.filter(author=user)
         # Numbers
-        postsNum = len(Post.objects.filter(author=user))
-        followersNum = len(Following.objects.filter(profile=profile))
-        followingNum = len(Following.objects.filter(following_user=profile))
+        # postsNum = profile.postNum
+        # followersNum = profile.followersNum
+        # followingNum = profile.followingNum
         # User browsing
         current_user = User.objects.get(pk=request.user.pk)
         current_user_profile = Profile.objects.get(owner=current_user)
         # Check if current user already following this account
         already_following = Following.objects.filter(profile=profile, following_user=current_user_profile).exists()
 
-        return render(request, 'profile.html', {'owner':user, 'profile':profile, 'postsNum':postsNum, \
-            'followersNum':followersNum,'followingNum':followingNum, 'posts':posts, "already_following":already_following })
+        return render(request, 'profile.html', {'owner':user, 'profile':profile, \
+             'posts':posts, "already_following":already_following })
     except User.DoesNotExist:
-        return HttpResponseNotFound("Profile not found ☹️")
+        return redirect('error', 'profile_not_found')
 
 def edit(request, username):
     # Entering the page
@@ -148,9 +148,8 @@ def edit(request, username):
         else:
             return render(request, 'profile.html', {'owner':user})
     except User.DoesNotExist:
-        return HttpResponseNotFound("Profile not found ☹️")
-        
-        
+        return redirect('error', 'profile_not_found')
+
 @login_required(login_url=reverse_lazy('signup'))
 def follow(request, profile_pk):
     if request.method == 'POST':
@@ -166,3 +165,16 @@ def follow(request, profile_pk):
         else:
             Following.objects.create(profile=to_follow_profile, following_user=current_user)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def search(request):
+    if request.method == 'POST':
+        users = User.objects.filter(username__contains=request.POST['search'])
+        profiles = Profile.objects.none()
+        for user in users:
+            profiles |= Profile.objects.filter(owner=user)
+        if profiles:
+            return render(request, 'search_profile.html', {'matching_profiles':profiles })
+        else:
+            return redirect('error', 'profile_not_found')
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

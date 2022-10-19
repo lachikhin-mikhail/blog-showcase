@@ -1,13 +1,11 @@
-from django.urls import path, re_path
+from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('login', views.login, name='login'),
-    path('logout', views.logout, name='logout'),
-    re_path(r'^signup/$', views.signup, name='signup'),
-    path('activate/<slug:uidb64>/<slug:token>/',
+    path('activate/<slug:uidb64>/<slug:token>/', # email confirmation
         views.activate, name='activate'),
-    path('<slug:username>/', views.profile, name='profile'),
-    path('<slug:username>/edit',views.edit, name='edit'),
-    path('follow/<slug:profile_pk>', views.follow, name='follow')
+    path('<slug:username>/', views.profile, name='profile'), # profile
+    path('<slug:username>/edit',views.edit, name='edit'), # profile edit
+    path('follow/<slug:profile_pk>', views.follow, name='follow'), # user pressed follow button
+    path('search/>', views.search, name='search_profile'),
 ]
