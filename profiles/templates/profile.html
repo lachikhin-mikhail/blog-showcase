@@ -30,11 +30,17 @@
                       <p class="mb-0">{{ followingNum }}</p>
                     </div>
                   </div>
-                  {% if user.is_authenticated and user != owner %}
-                    <div class="d-flex pt-1">
-                    <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
-                    <button type="button" class="btn btn-primary flex-grow-1">Follow</button>
-                  {% endif %}
+                  {% if not already_following and  user.is_authenticated and user != owner %}
+                    <form method="POST" action="{% url 'follow' profile.pk %}">
+                      {% csrf_token %}
+                      <input class="btn btn-primary flex-grow-1" type="submit" value="Follow"/>
+                      </form>
+                   {% elif already_following and  user.is_authenticated and user != owner%}   
+                   <form method="POST" action="{% url 'follow' profile.pk %}">
+                    {% csrf_token %}
+                    <input class="btn btn-secondary flex-grow-1" type="submit" value="Unfollow"/>
+                    </form>
+                    {% endif %}
                   {% if user.is_authenticated and user == owner %}
                     <form action="{% url 'edit' username=owner.username %}">
                       <input type="submit" value="Edit" />

@@ -1,8 +1,8 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import auth
-from profiles.models import Profile
+from profiles.models import Profile, Following
 from posts.models import Post
 from django.contrib.sites.shortcuts import get_current_site
 from .tokens import account_activation_token
@@ -11,7 +11,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.db import ProgrammingError
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 """ def signup(request):
     if request.method == 'POST':
@@ -102,20 +104,22 @@ def logout(request):
 
 def profile(request, username):
     try:
+        # profile owner
         user = User.objects.get(username=username)
         profile = Profile.objects.get(owner=user)
         posts = Post.objects.filter(author=user)
+        # Numbers
         postsNum = len(Post.objects.filter(author=user))
-        followersNum = len(Profile.objects.filter(following=profile))
-        followingNum = 0
-        posts = Post.objects.filter(author=user)
-        try:
-            for i in profile.following:
-                followingNum += 1
-        except: 
-            pass
+        followersNum = len(Following.objects.filter(profile=profile))
+        followingNum = len(Following.objects.filter(following_user=profile))
+        # User browsing
+        current_user = User.objects.get(pk=request.user.pk)
+        current_user_profile = Profile.objects.get(owner=current_user)
+        # Check if current user already following this account
+        already_following = Following.objects.filter(profile=profile, following_user=current_user_profile).exists()
+
         return render(request, 'profile.html', {'owner':user, 'profile':profile, 'postsNum':postsNum, \
-            'followersNum':followersNum,'followingNum':followingNum, 'posts':posts })
+            'followersNum':followersNum,'followingNum':followingNum, 'posts':posts, "already_following":already_following })
     except User.DoesNotExist:
         return HttpResponseNotFound("Profile not found ☹️")
 
@@ -145,8 +149,20 @@ def edit(request, username):
             return render(request, 'profile.html', {'owner':user})
     except User.DoesNotExist:
         return HttpResponseNotFound("Profile not found ☹️")
-
-
         
         
-    
+@login_required(login_url=reverse_lazy('signup'))
+def follow(request, profile_pk):
+    if request.method == 'POST':
+        current_user = get_object_or_404(Profile, owner=request.user)
+        to_follow_profile = get_object_or_404(Profile, pk=profile_pk)
+        if Following.objects.filter(profile=to_follow_profile, following_user=current_user).exists():
+            try:
+                follow=Following.objects.get(profile=to_follow_profile, following_user=current_user)
+                follow.delete()
+            except:
+                pass
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        else:
+            Following.objects.create(profile=to_follow_profile, following_user=current_user)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

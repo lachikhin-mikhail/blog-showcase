@@ -8,5 +8,6 @@ urlpatterns = [
     path('activate/<slug:uidb64>/<slug:token>/',
         views.activate, name='activate'),
     path('<slug:username>/', views.profile, name='profile'),
-    path('<slug:username>/edit',views.edit, name='edit')
+    path('<slug:username>/edit',views.edit, name='edit'),
+    path('follow/<slug:profile_pk>', views.follow, name='follow')
 ]

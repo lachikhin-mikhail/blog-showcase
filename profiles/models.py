@@ -10,10 +10,13 @@ class Profile(models.Model):
     profilePicture = models.ImageField(null=True, blank=True, upload_to='profiles/', default='default/default-pfp.jpg')  
     """Technical fields unaccessable for users"""
     owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
-    following = models.ForeignKey("self", on_delete=models.DO_NOTHING, blank=True, null=True, unique=False)
     
     def __str__(self):
         str=self.owner.username
         str=str + "'s profile"
         return str
         
+class Following(models.Model):
+    profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='followed_profile')
+    following_user = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='following_user')
+    
