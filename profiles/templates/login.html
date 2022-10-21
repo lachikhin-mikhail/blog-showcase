@@ -7,40 +7,6 @@
 <br />
 <br />
 {% endif %}
-<!--
-<h1>Login</h1>
-
-   <main>
-       <div class="justtext4">
-           <h5>
-               LOG IN
-           </h5>
-       </div>
-
-       <div class="circle1"></div>
-       <div class="login-form-container">
-           <form method="POST" action="{% url 'login' %}">
-             {% csrf_token %}
-               <div class="form-fields">
-                 <input type="text" name="username" placeholder="USERNAME"/>
-                </div>
-                <br>
-                   <div class="form-field">
-                     <input type="password" name="password" placeholder="PASSWORD"/>
-
-               </div>
-               <br>
-               <div class="form-buttons">
-                 <input class="btn btn-primary" type="submit" value="Login" />
-               </div>
-               <br>
-               <p><a href="{% url 'signup' %}">you dont have account?</a></p>
-           </form>
-       </div>
-   </main>
-
-</body>
--->
 
   <body class="text-center">
     
@@ -60,6 +26,9 @@
       <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
       <label for="floatingPassword">Password</label>
     </div>
+    <label>
+      <input type="checkbox" value="remember" name="remember_me" id="remember_me" checked /> Remember me
+    </label>
 
     {% comment %} <div class="checkbox mb-3">
       <label>
@@ -69,9 +38,10 @@
     <div class="form-buttons">
       <input class="btn btn-primary" type="submit" value="Login" />
     </div>
+  </form>
     <p><a href="{% url 'signup' %}">you dont have account?</a></p>
     <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
-  </form>
+
 </main>
 
 

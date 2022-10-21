@@ -11,12 +11,12 @@
             <div class="card-body p-4">
               <div class="d-flex text-black">
                 <div class="flex-shrink-0">
-                  <img class="pfp" src="{% get_media_prefix %}{{profile.profilePicture }}" alt="img">
+                  <img class="pfp" src="{% get_media_prefix %}{{ profile.profilePicture }}" alt="img">
                 </div>
                 <a href="{% url "profile" profile.owner.username %}"
                 <div class="flex-grow-1 ms-3">
                   <h5 class="mb-1">{{ profile.owner.username }}</h5>
-                  <p class="mb-2 pb-1" style="color: #2b2a2a;">{{ profile.name }}</p>
+                  <p class="mb-2 pb-1" style="color: #2b2a2a;">{% if profile.name %}{{ profile.name }}{% endif %}</p>
                   <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                     style="background-color: #efefef;">
                     <div>
@@ -33,17 +33,6 @@
                     </div>
                   </div>
                 </a>
-                  {% if not already_following and  user.is_authenticated and user != owner %}
-                    <form method="POST" action="{% url 'follow' profile.pk %}">
-                      {% csrf_token %}
-                      <input class="btn btn-primary flex-grow-1" type="submit" value="Follow"/>
-                      </form>
-                   {% elif already_following and  user.is_authenticated and user != owner%}   
-                   <form method="POST" action="{% url 'follow' profile.pk %}">
-                    {% csrf_token %}
-                    <input class="btn btn-secondary flex-grow-1" type="submit" value="Unfollow"/>
-                    </form>
-                    {% endif %}
                   
                   </div>
                 </div>

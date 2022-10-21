@@ -1,19 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Comments
 from profiles.models import Profile, Following
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 
 
-def home(request,followed_feed=False):
+def home(request, followed_feed=False):
     # Posts from followed authors
-    if followed_feed == True:
+    if followed_feed is True:
         if request.user.is_authenticated:
             current_user = request.user
             current_profile = Profile.objects.get(owner=current_user)
-            followed_obj = Following.objects.filter(following_user=current_profile)
+            followed_obj = Following.objects.filter(
+                        following_user=current_profile
+                        )
             followed_author_list = []
             for followed in followed_obj:
                 followed_author_list.append(followed.profile.owner)
@@ -21,28 +22,33 @@ def home(request,followed_feed=False):
             for author in followed_author_list:
                 posts |= Post.objects.filter(author=author)
             posts = posts.order_by('date').reverse()
-            return render(request, 'main.html', {'posts':posts })
+            return render(request, 'main.html', {'posts': posts})
         else:
             posts = Post.objects.all().order_by('date').reverse()
-            return render(request, 'main.html', {'posts':posts })
+            return render(request, 'main.html', {'posts': posts})
     # Search query  
     elif request.method == 'POST':
         search = request.POST['search']
         posts = Post.objects.filter(title__contains=search)
         if posts:
-            return render(request, 'main.html', {'posts':posts })
+            return render(request, 'main.html', {'posts': posts})
         else:
             return redirect('error', 'post_not_found')
     # All posts
     else:
         posts = Post.objects.all().order_by('date').reverse()
-        return render(request, 'main.html', {'posts':posts })
+        return render(request, 'main.html', {'posts': posts})
+
 
 def post(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
     try:
-        comments= Comments.objects.filter(parent_post=post).order_by('date').reverse()
-        return render(request, 'post.html', {'post':post, 'comments':comments})
+        comments = Comments.objects.filter(parent_post=post) \
+            .order_by('date').reverse()
+        return render(request, 'post.html', {
+            'post': post,
+            'comments': comments
+            })
     except ValueError:
         return redirect('error', 'post_not_found')
     
@@ -94,4 +100,3 @@ def like(request, post_pk):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-

@@ -14,10 +14,12 @@
                 </div>
                 <div class="flex-grow-1 ms-3">
                   <h5 class="mb-1">{{ owner.username }}</h5>
-                  <p class="mb-2 pb-1" style="color: #2b2a2a;">{{ profile.name }}</p>
+                  
+                  <p class="mb-2 pb-1" style="color: #2b2a2a;">{% if profile.name %}{{ profile.name }}{% endif %}</p>
                   <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                     style="background-color: #efefef;">
                     <div>
+                      
                       <p class="small text-muted mb-1">Posts</p>
                       <p class="mb-0">{{ profile.postsNum }}</p>
                     </div>
@@ -55,13 +57,14 @@
           </div>
         </div>
         <!-- About -->
+        {% if profile.bio %}
         <div class="card row d-flex justify-content-center align-items-center h-100 " style="border-radius: 15px;">
         <p>{{ profile.bio }}</p>
         </div>
       </div>
     </div>
   </section>
-
+      {% endif %}
   <!-- Posts -->
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     <div class="col-3"></div>
