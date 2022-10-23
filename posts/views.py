@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 def home(request, followed_feed=False):
     # Posts from followed authors
-    if followed_feed is True:
+    if followed_feed is not False:
         if request.user.is_authenticated:
             current_user = request.user
             current_profile = Profile.objects.get(owner=current_user)
@@ -26,7 +26,7 @@ def home(request, followed_feed=False):
         else:
             posts = Post.objects.all().order_by('date').reverse()
             return render(request, 'main.html', {'posts': posts})
-    # Search query  
+    # Search posts  
     elif request.method == 'POST':
         search = request.POST['search']
         posts = Post.objects.filter(title__contains=search)
