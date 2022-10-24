@@ -1,0 +1,88 @@
+services:
+  back:
+    container_name: blog-django
+    build: ./blog-master
+    command:  gunicorn blog.wsgi:application --bind 0.0.0.0:8000
+    expose:
+    - 8000
+    links:
+      - db
+    volumes:
+      - blog-django:/usr/src/app/
+      - blog-static:/usr/src/app/static
+      - blog-media:/usr/src/app/media
+
+    env_file: ./.env
+    depends_on:
+      db:
+        condition: service_healthy
+  nginx:
+    container_name: blog-nginx
+    build: ./nginx/
+    ports:
+      - "1337:80"
+    volumes:
+      - blog-static:/usr/src/app/static
+      - blog-media:/usr/src/app/media
+
+    links:
+      - back
+    depends_on:
+      - back 
+
+  db:
+    container_name: db
+    image: postgres:14
+    restart: always
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_DB: docker
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docker"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:5.5
+    container_name: pgadmin
+    restart: always
+    ports:
+     - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: docker@mailhog.local
+      PGADMIN_DEFAULT_PASSWORD: docker
+      PGADMIN_LISTEN_PORT: 80
+    volumes:
+       - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      db:
+        condition: service_healthy
+    links: 
+      - db 
+
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog
+    #logging:
+    #  driver: 'none'  # disable saving logs
+    expose:
+      - 1025
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+
+
+volumes:
+  blog-django:
+  blog-static:
+  blog-media:
+  pgdata:
+  pgadmin-data:
